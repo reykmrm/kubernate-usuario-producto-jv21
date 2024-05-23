@@ -15,7 +15,6 @@ import java.util.Date;
 @Entity
 @Table(name = "products")
 @Data
-//si hay un constructor con elementos, se necesita uno por defecto
 @AllArgsConstructor
 @NoArgsConstructor
 public class Product {
@@ -27,9 +26,13 @@ public class Product {
     private String nombre;
     private String descripcion;
     @Column(name = "categorias")
-    private Categoria categoria; //no me da el valor de la categoria, habra que extraerlo?
+    private Categoria categoria;
     private String marca;
     private double peso;
     @Temporal(TemporalType.DATE)
     private LocalDate fechaVencimiento;
+
+    //FK
+    //seria una relacion de uno a muchos, List<Ususarios> listUsuario;
+    private Long idUsuario;
 }

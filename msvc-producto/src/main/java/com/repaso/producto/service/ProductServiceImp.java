@@ -24,14 +24,16 @@ public class ProductServiceImp implements ProductService{
 
     @Override
     @Transactional
-    //falta manejar el error en caso tal de que la fecha sea anterior a la fecha actual
-    public void crearP(ProductDto productDto) {
+    public void guardarProducto(ProductDto productDto, Long idUsuario ) {
+        productDto.setIdUsuario(idUsuario);
+
         if (!productDto.getCategoria().toString().equalsIgnoreCase(Categoria.ALIMENTOS.toString())
-                && productDto.getFechaVencimiento() == null) {//si es alimento y la fecha es nula o vacia
+                && productDto.getFechaVencimiento() == null) {
             productDto.setFechaVencimiento(LocalDate.now());
         }else if(productDto.getFechaVencimiento()==null){
             throw new IllegalArgumentException("Los productos de la categoria alimentos deben llevar fecha");
         }
+
         if(validarFecha(productDto)){
             productRepository.
                     save(productMapper.
@@ -56,12 +58,21 @@ public class ProductServiceImp implements ProductService{
 
     @Override
     @Transactional
-    public void eliminarP(int id) {
+    public void eliminarProducto(int id) {
         productRepository.deleteById(id);
     }
 
-    //la validacion de la fecha
-    //no se puede poner una fecha antes de la fecha actual, en el modificar y crear
+    @Override
+    public Product actualizarProducto(ProductDto productDto) {
+        return productRepository.save(productMapper.pasarDeProductDto(productDto));
+    }
+
+    /**
+     * No se puede poner una fecha antes
+     * de la fecha actual, en el modificar y crear.
+     * @param productDto
+     * @return Boolean
+     */
     public Boolean validarFecha(ProductDto productDto){
         LocalDate hoy = LocalDate.now(); ///hoy
         LocalDate fechaProduct = productDto.getFechaVencimiento(); //fecha 'x'

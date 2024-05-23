@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 public class ProductMapper {
 
     //esto en el servicio
-    public Product  pasarDeProductDto (ProductDto productDto){
+    public Product pasarDeProductDto (ProductDto productDto){
         Product productE = new Product();
         BeanUtils.copyProperties(productDto,productE);
         return productE;
