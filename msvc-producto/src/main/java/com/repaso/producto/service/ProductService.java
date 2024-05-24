@@ -6,11 +6,15 @@ import java.util.Optional;
 
 public interface ProductService {
 
-    void crearP(ProductDto productDto);
+    void guardarProducto(ProductDto productDto,Long idUsuario);
 
     Optional<Product> porId(int id);
 
     List<Product> obtenerTodos();
 
-    void eliminarP(int id);
+    void eliminarProducto(int id);
+
+    Product actualizarProducto(ProductDto productDto);
+
+    Boolean validarExistenciaCodigoProducto(String codigo);
 }

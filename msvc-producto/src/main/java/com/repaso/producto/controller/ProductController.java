@@ -1,4 +1,5 @@
 package com.repaso.producto.controller;
+import com.repaso.producto.client.UsuarioClientRest;
 import com.repaso.producto.models.dto.ProductDto;
 import com.repaso.producto.models.entity.Product;
 import com.repaso.producto.service.ProductServiceImp;
@@ -19,19 +20,15 @@ public class ProductController {
     @Autowired
     private ProductServiceImp productServiceImp;
 
-    //tabla producto registro = empleado que lo registro
-    /*
-    En la tabla producto vamos a registrar quien es el usuario que registra el nuevo producto
-     */
-
-    @PostMapping
-    //Yo tengo las validaciones en la entidad y no en el dto, pueden no funcionar?
-    public ResponseEntity<?> guardar(@RequestBody @Valid ProductDto productDto,BindingResult result){
+    @PostMapping("/{id}")
+    public ResponseEntity<?> guardarProducto(@RequestBody @Valid ProductDto productDto,
+                                             BindingResult result,@RequestParam Long id){
+        //usuarioClientRest.porId(id);
         if(result.hasErrors()){
             return validarErrores(result);
         }
         try{
-            productServiceImp.crearP(productDto);
+            productServiceImp.guardarProducto(productDto, id);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }catch (IllegalArgumentException ex){
             return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
@@ -69,7 +66,7 @@ public class ProductController {
             p.setMarca(productDto.getMarca());
             p.setPeso(productDto.getPeso());
             p.setFechaVencimiento(productDto.getFechaVencimiento());
-            productServiceImp.crearP(productDto);
+            productServiceImp.actualizarProducto(productDto);
             return ResponseEntity.
                     status(HttpStatus.ACCEPTED).build();
         }
@@ -78,7 +75,7 @@ public class ProductController {
 
     @DeleteMapping("/{code}")
     public void eliminar(int code){
-        productServiceImp.eliminarP(code);
+        productServiceImp.eliminarProducto(code);
     }
 
     /**
